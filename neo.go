@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"sort"
 	"strconv"
 	"time"
 )
@@ -21,7 +22,7 @@ type NeoObject struct {
 	PotentiallyHazardous bool   `json:"is_potentially_hazardous_asteroid"`
 }
 
-func healthCheck(w http.ResponseWriter) {
+func healthCheck(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("OK"))
 }
@@ -113,6 +114,8 @@ func getIDs(w http.ResponseWriter, r *http.Request) {
 			ids = append(ids, obj.ID)
 		}
 	}
+
+	sort.Strings(ids)
 
 	if ids == nil {
 		ids = []string{}
